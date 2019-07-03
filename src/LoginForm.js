@@ -5,11 +5,11 @@ class LoginForm extends React.Component {
     return (
       <div className="login">
         <form className="login-form">
-          <input placeholder="Enter a username..." />
-          <input type="submit" value="Log In"/>
+          <input  onChange={(e)=>this.props.renderUserInput(e)} value={this.props.userInput} placeholder="Enter a username..." />
+          <input onClick={this.props.loginBtn} type="submit" value="Log In"/>
         </form>
       </div>
-    ); 
+    );
   }
 }
 

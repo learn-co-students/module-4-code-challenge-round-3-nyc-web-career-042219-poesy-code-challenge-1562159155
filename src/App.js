@@ -6,17 +6,103 @@ import PoemsContainer from './PoemsContainer'
 import NewPoemForm from './NewPoemForm'
 
 class App extends React.Component {
+
+  state ={
+    poems: [],
+    userInput: "",
+    user: false,
+    poemNameInput: "",
+    poemText: "",
+    colorText: false
+  }
+
+  changeColor=() => {
+    this.setState({
+      colorText: !this.state.colorText
+    })
+  }
+
+  addPoem =(e,name,text) => {
+    e.preventDefault()
+   console.log(name,text)
+   this.setState({
+     poems: [...this.state.poems, {title: name, content: text, author: this.state.userInput}]
+   })
+
+  }
+
+  renderNewPoem = (e) => {
+    console.log(e.target.value)
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+  }
+
+  renderUserInput = (e) => {
+    console.log(e.target.value)
+    this.setState({
+      userInput: e.target.value
+    })
+  }
+
+  loginBtn = () => {
+    this.setState({
+      user: true
+    })
+  }
+
+  logoutBtn = () => {
+    this.setState({
+      user: false,
+      userInput: ""
+    })
+  }
+
+  componentDidMount() {
+    fetch("http://localhost:3000/poems")
+    .then(res => res.json())
+    .then(poems => {
+      this.setState({poems: poems})
+    })
+  }
+
+  inOrOut = () => {
+    if(!this.state.user) {
+      return <LoginForm userInput={this.state.userInput} renderUserInput={this.renderUserInput} loginBtn={this.loginBtn}/>
+    } else if (this.state.user) {
+      return (
+        <div>
+      <UserHeader logoutBtn={this.logoutBtn} userInput={this.state.userInput}/>
+      <NewPoemForm addPoem={this.addPoem} renderNewPoem={this.renderNewPoem} poemNameInput={this.state.poemNameInput} poemText={this.state.poemText} />
+      </div>
+    )
+    } else {
+      return <LoginForm userInput={this.state.userInput} renderUserInput={this.renderUserInput} loginBtn={this.loginBtn}/>
+    }
+  }
+
   render(){
+     console.log(this.state.poems)
     return (
       <div className="app">
         <div className="sidebar">
-          <LoginForm />
-          <UserHeader />
-          <NewPoemForm />
+
+
+
+
+
+        {this.inOrOut()/*!this.state.user?
+            <LoginForm userInput={this.state.userInput} renderUserInput={this.renderUserInput} loginBtn={this.loginBtn}/>
+            :
+
+            <UserHeader logoutBtn={this.logoutBtn} userInput={this.state.userInput}/>
+
+        */}
+
         </div>
-        <PoemsContainer/>
+        <PoemsContainer colorText={this.state.colorText} changeColor={this.changeColor} poems={this.state.poems}/>
       </div>
-    ); 
+    );
   }
 }
 
