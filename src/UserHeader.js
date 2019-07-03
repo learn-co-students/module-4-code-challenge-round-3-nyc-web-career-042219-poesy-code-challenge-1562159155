@@ -4,8 +4,8 @@ class UserHeader extends React.Component {
   render(){
     return (
       <div className="user-header">
-        <h3>Welcome, {/* username */}!</h3>
-        <button>Logout</button>
+        <h3>Welcome, {this.props.currUser}!</h3>
+        <button onClick={() => this.props.handleLogin("")}>Logout</button>
       </div>
     ); 
   }
