@@ -7,7 +7,7 @@ import NewPoemForm from './NewPoemForm'
 
 class App extends React.Component {
 
-  state ={
+  state = {
     poems: [],
     userInput: "",
     user: false,
@@ -16,18 +16,28 @@ class App extends React.Component {
     colorText: false
   }
 
-  changeColor=() => {
+  changeColor = id => {
+    const updatedPoems = this.state.poems.map(poem => {
+      if (poem.id === id) {
+        return {
+          ...poem,
+          read: !poem.read
+        }
+      } else {
+        return poem
+      }
+    })
     this.setState({
-      colorText: !this.state.colorText
+      poems: updatedPoems
     })
   }
 
-  addPoem =(e,name,text) => {
+  addPoem = (e, name, text) => {
     e.preventDefault()
-   console.log(name,text)
-   this.setState({
-     poems: [...this.state.poems, {title: name, content: text, author: this.state.userInput}]
-   })
+    console.log(name, text)
+    this.setState({
+      poems: [...this.state.poems, { title: name, content: text, author: this.state.userInput }]
+    })
 
   }
 
@@ -38,16 +48,17 @@ class App extends React.Component {
     })
   }
 
-  renderUserInput = (e) => {
-    console.log(e.target.value)
-    this.setState({
-      userInput: e.target.value
-    })
-  }
+  // renderUserInput = (e) => {
+  //   console.log(e.target.value)
+  //   this.setState({
+  //     userInput: e.target.value
+  //   })
+  // }
 
-  loginBtn = () => {
+  loginBtn = (username) => {
     this.setState({
-      user: true
+      user: true,
+      userInput: username
     })
   }
 
@@ -60,38 +71,39 @@ class App extends React.Component {
 
   componentDidMount() {
     fetch("http://localhost:3000/poems")
-    .then(res => res.json())
-    .then(poems => {
-      this.setState({poems: poems})
-    })
+      .then(res => res.json())
+      .then(poems => {
+        const updatedPoems = poems.map(poem => {
+          return {
+            ...poem,
+            read: false
+          }
+        })
+        this.setState({ poems: updatedPoems })
+      })
   }
 
   inOrOut = () => {
-    if(!this.state.user) {
-      return <LoginForm userInput={this.state.userInput} renderUserInput={this.renderUserInput} loginBtn={this.loginBtn}/>
+    if (!this.state.user) {
+      return <LoginForm userInput={this.state.userInput} renderUserInput={this.renderUserInput} loginBtn={this.loginBtn} />
     } else if (this.state.user) {
       return (
         <div>
-      <UserHeader logoutBtn={this.logoutBtn} userInput={this.state.userInput}/>
-      <NewPoemForm addPoem={this.addPoem} renderNewPoem={this.renderNewPoem} poemNameInput={this.state.poemNameInput} poemText={this.state.poemText} />
-      </div>
-    )
+          <UserHeader logoutBtn={this.logoutBtn} userInput={this.state.userInput} />
+          <NewPoemForm addPoem={this.addPoem} renderNewPoem={this.renderNewPoem} poemNameInput={this.state.poemNameInput} poemText={this.state.poemText} />
+        </div>
+      )
     } else {
-      return <LoginForm userInput={this.state.userInput} renderUserInput={this.renderUserInput} loginBtn={this.loginBtn}/>
+      return <LoginForm userInput={this.state.userInput} renderUserInput={this.renderUserInput} loginBtn={this.loginBtn} />
     }
   }
 
-  render(){
-     console.log(this.state.poems)
+  render() {
+    console.log(this.state.poems)
     return (
       <div className="app">
         <div className="sidebar">
-
-
-
-
-
-        {this.inOrOut()/*!this.state.user?
+          {this.inOrOut()/*!this.state.user?
             <LoginForm userInput={this.state.userInput} renderUserInput={this.renderUserInput} loginBtn={this.loginBtn}/>
             :
 
@@ -100,7 +112,7 @@ class App extends React.Component {
         */}
 
         </div>
-        <PoemsContainer colorText={this.state.colorText} changeColor={this.changeColor} poems={this.state.poems}/>
+        <PoemsContainer colorText={this.state.colorText} changeColor={this.changeColor} poems={this.state.poems} />
       </div>
     );
   }

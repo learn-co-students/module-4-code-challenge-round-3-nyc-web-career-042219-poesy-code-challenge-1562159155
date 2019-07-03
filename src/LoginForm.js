@@ -1,12 +1,29 @@
 import React from 'react';
 
 class LoginForm extends React.Component {
-  render(){
+  state = {
+    userInput: ""
+
+  }
+
+  renderUserInput = (e) => {
+    console.log(e.target.value)
+    this.setState({
+      userInput: e.target.value
+    })
+  }
+
+  handleSubmit = e => {
+    e.preventDefault()
+    this.props.loginBtn(this.state.userInput)
+  }
+
+  render() {
     return (
       <div className="login">
-        <form className="login-form">
-          <input  onChange={(e)=>this.props.renderUserInput(e)} value={this.props.userInput} placeholder="Enter a username..." />
-          <input onClick={this.props.loginBtn} type="submit" value="Log In"/>
+        <form onSubmit={this.handleSubmit} className="login-form">
+          <input onChange={this.renderUserInput} value={this.state.userInput} placeholder="Enter a username..." />
+          <input type="submit" value="Log In" />
         </form>
       </div>
     );

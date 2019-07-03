@@ -2,15 +2,15 @@ import React from 'react';
 import Poem from './Poem';
 
 class PoemsContainer extends React.Component {
-  render(){
+  render() {
     // console.log(this.props.poems) have poems in array
     const poemsList = this.props.poems.map(poem => {
-      return <Poem key={poem.id} poem={poem}/>
+      return <Poem key={poem.id} poem={poem} changeColor={this.props.changeColor} colorText={this.props.colorText} />
     })
     return (
       <div className="poems-container">
         {poemsList
-         /* render poems here*/
+          /* render poems here*/
         }
       </div>
     );
