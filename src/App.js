@@ -32,13 +32,10 @@ class App extends React.Component {
     })
   }
 
-  addPoem = (e, name, text) => {
-    e.preventDefault()
-    console.log(name, text)
+  addPoem = (poemObj) => {
     this.setState({
-      poems: [...this.state.poems, { title: name, content: text, author: this.state.userInput }]
+      poems: [...this.state.poems, { title: poemObj.poemNameInput, content: poemObj.poemText, author: this.state.userInput }]
     })
-
   }
 
   renderNewPoem = (e) => {
